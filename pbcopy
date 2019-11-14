@@ -1,0 +1,34 @@
+
+function compile(program) {
+
+  let tape = Array(10).fill(0);
+  let ptr = 0;
+
+  for (let char of program) {
+    
+    switch (char) {
+      case "+":
+        type[ptr]++;
+        break;
+      case "-":
+        tape[ptr]--;
+        break;
+      case ">":
+        ptr++;
+        tape[ptr] = tape[ptr] || 0
+        break;
+      case "<":
+        ptr--;
+        tape[ptr] = tape[ptr] || 0
+        break;
+      case ".":
+        console.log(String.fromCharCode(tape[ptr]));
+        break;
+      case ",":
+        tape[ptr] = prompt()[0].charCodeAt()
+        break;
+    }
+  }
+}
+
+console.log(compile(">>,."))
