@@ -1,9 +1,9 @@
 use std;
-use std::io::{self, Read};
+use std::io::{self, Read, Write};
 
 pub fn evaluate(program: String) {
 
-    let tape_length = 100;
+    let tape_length = 30_000;
 
     let mut buffer = String::new();
 
@@ -39,7 +39,10 @@ pub fn evaluate(program: String) {
             '<' => {
                 ptr -= 1;
             },
-            '.' => print!("{}", tape[ptr] as char),
+            '.' => {
+                print!("{}", tape[ptr] as char);
+                io::stdout().flush();
+            },
             ',' => {
                 io::stdin().read_to_string(&mut buffer);
                 tape[ptr] = buffer.chars().next().unwrap() as u8;
