@@ -5,12 +5,6 @@
 
 A brainfuck interpreter
 
-```rust
-use br4infuck::compile;
-
-fn main() {
-    compile("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.".to_string());
-}⏎                                                                                                                                                 
-
-// Prints: "Hello World"
+```sh
+~$ br4infuck /path/to/brainfuck_code.bf
 ```
