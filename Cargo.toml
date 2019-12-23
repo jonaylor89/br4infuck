@@ -3,6 +3,13 @@ name = "brainfuck"
 version = "0.1.0"
 authors = ["John Naylor <jonaylor89@gmail.com>"]
 edition = "2018"
+description = "A brainfuck interpreter"
+repository = "https://github.com/jonaylor89/Brainfuck"
+license = "MIT"
+readme = "README.md"
+exclude = [
+  "assets/*"
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
