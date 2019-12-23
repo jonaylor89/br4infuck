@@ -26,6 +26,7 @@ pub fn evaluate(program: String) {
                 else { inner_loops -= 1; }
             }
 
+            i += 1;
             continue;
         }
 
@@ -57,7 +58,7 @@ pub fn evaluate(program: String) {
                     loop_stack.push(i);
                 }
             },
-            _ => continue,
+            _ => {},
         }
 
         i += 1;
