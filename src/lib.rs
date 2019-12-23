@@ -1,7 +1,7 @@
 use std;
 use std::io::{self, Read};
 
-pub fn compile(program: String) {
+pub fn evaluate(program: String) {
 
     let tape_length = 100;
 
