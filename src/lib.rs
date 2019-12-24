@@ -1,4 +1,5 @@
 use std;
+use std::fs::OpenOptions;
 use std::io::{self, Read, Write};
 
 // Interpret brainfuck code
@@ -74,7 +75,12 @@ pub fn evaluate(program: String) {
 
 // compile brainfuck code to x86
 pub fn compile(program: String) {
-    let out_file = "a.out";
+
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create(true)
+        .open("temp.s")
+        .unwrap();
 
     let mut matching_bracket;
 
@@ -92,40 +98,41 @@ pub fn compile(program: String) {
         "  movl $0, %esi\n",     // fill with 0's
         "  movq $30000, %rdx\n", // length 30,000 B
         "  call _memset\n",      // memset
-        "  movq %rsp, %r12"
+        "  movq %rsp, %r12\n",
+        "\n",
     );
 
-    println!("{}", prologue);
+    file.write_all(prologue.as_bytes());
 
     let mut i = 0;
     while i < program.len() {
         let c = program.chars().nth(i).unwrap();
 
         match c {
-            '+' => println!("  incb (%r12)"),
-            '-' => println!("  decb (%r12)"),
-            '>' => println!("  inc %r12"),
-            '<' => println!("  dec %r12"),
+            '+' => { file.write_all(b"  incb (%r12)\n"); },
+            '-' => { file.write_all(b"  decb (%r12)\n"); },
+            '>' => { file.write_all(b"  inc %r12\n"); },
+            '<' => { file.write_all(b"  dec %r12\n"); },
             '.' => {
                 // move byte to double word and zero upper bits since putchar takes an int.
-                println!("  movzbl (%r12), %edi");
-                println!("  call _putchar");
+                file.write_all(b"  movzbl (%r12), %edi\n");
+                file.write_all(b"  call _putchar\n");
             }
             ',' => {
-                println!("  call _getchar");
-                println!("  movb %al, (%r12)");
+                file.write_all(b"  call _getchar\n");
+                file.write_all(b"  movb %al, (%r12)\n");
             }
             ']' => {
                 matching_bracket = loop_stack.pop().unwrap(); // Should check if stack underflow
-                println!("  cmpb $0, (%r12)");
-                println!("  jne bracket_{}_start", matching_bracket);
-                println!("bracket_{}_end:", matching_bracket);
+                file.write_all(b"  cmpb $0, (%r12)\n");
+                file.write_all(format!("  jne bracket_{}_start\n", matching_bracket).as_bytes());
+                file.write_all(format!("bracket_{}_end:\n", matching_bracket).as_bytes());
             }
             '[' => {
                 loop_stack.push(num_brackets); // Should check if too much nesting
-                println!("  cmpb $0, (%r12)");
-                println!("  je bracket_{}_end", num_brackets);
-                println!("bracket_{}_start:", num_brackets);
+                file.write_all(b"  cmpb $0, (%r12)\n");
+                file.write_all(format!("  je bracket_{}_end\n", num_brackets).as_bytes());
+                file.write_all(format!("bracket_{}_start:\n", num_brackets).as_bytes());
                 num_brackets += 1;
             }
             _ => {}
@@ -140,5 +147,5 @@ pub fn compile(program: String) {
         "  popq %rbp\n",
         "  ret\n"
     );
-    println!("{}", epilogue);
+    file.write_all(epilogue.as_bytes());
 }
