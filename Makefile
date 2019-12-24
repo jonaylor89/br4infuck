@@ -12,7 +12,7 @@ build: clean
 .PHONY: clean
 ## clean: cleans the binary
 clean:
-	@rm -rf ${APP} temp.s a.out
+	@rm -rf temp.s a.out
 
 .PHONY: install 
 ## install: install the binary 
