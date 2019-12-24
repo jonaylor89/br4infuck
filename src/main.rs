@@ -1,13 +1,12 @@
-
-use std::{fs, env};
-use br4infuck::evaluate;
+use br4infuck::{compile};
+use std::{env, fs};
 
 fn main() {
     let path = match env::args().nth(1) {
         Some(x) => x,
         _ => {
             println!("[-] Must specify a path to a file containing brainfuck code");
-            return
+            return;
         }
     };
 
@@ -15,9 +14,10 @@ fn main() {
         Ok(x) => x,
         _ => {
             println!("[-] Unable to read in file");
-            return
+            return;
         }
     };
 
-    evaluate(code_string);
+    // evaluate(code_string);
+    compile(code_string)
 }
