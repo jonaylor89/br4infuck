@@ -17,4 +17,3 @@ FROM alpine:latest
 
 COPY --from=builder /build-out/br4infuck /
 
-CMD ["/br4infuck"]
